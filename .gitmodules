@@ -1,0 +1,3 @@
+[submodule "libatat"]
+	path = libatat
+	url = ../libatat
