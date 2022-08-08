@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL_events.h>
+#include <SDL_keycode.h>
 #include <SDL_pixels.h>
 #include <SDL_render.h>
 #include <SDL_surface.h>
@@ -28,7 +29,7 @@ static constexpr int SCREEN_HEIGHT {static_cast<int>(TEXTURE_WIDTH * SCALE)};
 //static constexpr int SCREEN_WIDTH  {static_cast<int>(TEXTURE_WIDTH * SCALE)};
 //static constexpr int SCREEN_HEIGHT {static_cast<int>(TEXTURE_HEIGHT * SCALE)};
 
-static constexpr uint32_t FRAME_SKIP_AMOUNT{5};
+static constexpr uint32_t REFRESH_RATE{1000/120}; // milliseconds
 
 int main(int argc, char const** argv)
 {
@@ -68,9 +69,8 @@ int main(int argc, char const** argv)
     //SDL_Color colors[2] {{0, 0, 0, 255}, {255, 255, 255, 255}};
     //DERR(SDL_SetPaletteColors(surface->format->palette, colors, 0, 2));
 
-    while(cpu.int_enabled_ == 0) {
+    while(cpu.int_enabled_ == 0)
         cpu.step();
-    }
 
     // 0 - Top half
     // 1 - Bottom half
@@ -79,18 +79,33 @@ int main(int argc, char const** argv)
 
     bool close{false};
     while(!close) {
-        for(uint32_t i{0};i<FRAME_SKIP_AMOUNT;++i)
+        //for(int i=0;i<20;++i)
+        //    cpu.step();
+        int frame_skip = 0;
+        do{
             cpu.step();
+            ++frame_skip;
+        }while(cpu.int_enabled_ == 0 || frame_skip < 20);
 
         SDL_Event e;
         while(SDL_PollEvent(&e)) {
             if(e.type == SDL_QUIT) {
-                close = true;
+                    close = true;
+            } else if(e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) {
+                atat::byte_t val = (e.type == SDL_KEYUP)?0:1;
+                switch(e.key.keysym.sym)
+                {
+                    case SDLK_a:        hw.left(val);     break;
+                    case SDLK_d:        hw.right(val);    break;
+                    case SDLK_SPACE:    hw.fire(val);     break;
+                    case SDLK_RETURN:   hw.credit(val);   break;
+                    case SDLK_1:        hw.start_1p(val); break;
+                }
             }
         }
 
         auto ticks = SDL_GetTicks();
-        if(ticks > (last_int_time + (1000/60)) && cpu.int_enabled_ == 1) {
+        if(ticks > (last_int_time + REFRESH_RATE) && cpu.int_enabled_ == 1) {
             last_int_time = ticks;
             cpu.generate_int(next_int?1:2);
 
