@@ -18,12 +18,14 @@
 #include "error.hh"
 #include "hardware.hh"
 
-static constexpr int SCREEN_WIDTH  {224};
-static constexpr int SCREEN_HEIGHT {256};
+static constexpr int TEXTURE_WIDTH  {256};
+static constexpr int TEXTURE_HEIGHT {224};
 
-static constexpr int TEXTURE_WIDTH  {SCREEN_HEIGHT};
-static constexpr int TEXTURE_HEIGHT {SCREEN_WIDTH};
+static constexpr double SCALE{2};
+static constexpr int SCREEN_WIDTH  {static_cast<int>(TEXTURE_HEIGHT * SCALE)};
+static constexpr int SCREEN_HEIGHT {static_cast<int>(TEXTURE_WIDTH * SCALE)};
 
+static constexpr uint32_t FRAME_SKIP_AMOUNT{5};
 
 int main(int argc, char const** argv)
 {
@@ -72,7 +74,9 @@ int main(int argc, char const** argv)
 
     bool close{false};
     while(!close) {
-        //fmt::print("int enabled: {}\n", cpu.int_enabled_);
+        for(uint32_t i{0};i<FRAME_SKIP_AMOUNT;++i)
+            cpu.step();
+
         SDL_Event e;
         while(SDL_PollEvent(&e)) {
             if(e.type == SDL_QUIT) {
@@ -98,8 +102,6 @@ int main(int argc, char const** argv)
 
         SDL_RenderPresent(renderer);
         SDL_DestroyTexture(texture);
-
-        cpu.step();
     }
 
     //SDL_DestroyTexture(texture);
