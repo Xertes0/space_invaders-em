@@ -15,6 +15,7 @@
 #include <stdexcept>
 #include <functional>
 
+#include "atat/cpu/types.hh"
 #include "error.hh"
 #include "hardware.hh"
 
@@ -24,6 +25,8 @@ static constexpr int TEXTURE_HEIGHT {224};
 static constexpr double SCALE{2};
 static constexpr int SCREEN_WIDTH  {static_cast<int>(TEXTURE_HEIGHT * SCALE)};
 static constexpr int SCREEN_HEIGHT {static_cast<int>(TEXTURE_WIDTH * SCALE)};
+//static constexpr int SCREEN_WIDTH  {static_cast<int>(TEXTURE_WIDTH * SCALE)};
+//static constexpr int SCREEN_HEIGHT {static_cast<int>(TEXTURE_HEIGHT * SCALE)};
 
 static constexpr uint32_t FRAME_SKIP_AMOUNT{5};
 
@@ -59,16 +62,18 @@ int main(int argc, char const** argv)
     ERRN(renderer);
 
     SDL_Surface* surface{SDL_CreateRGBSurfaceWithFormat(
-        SDL_SWSURFACE, TEXTURE_WIDTH, TEXTURE_HEIGHT, 1, SDL_PIXELFORMAT_INDEX1MSB
+        SDL_SWSURFACE, TEXTURE_WIDTH, TEXTURE_HEIGHT, 1, SDL_PIXELFORMAT_ARGB8888
     )};
     ERRN(surface);
-    SDL_Color colors[2] {{0, 0, 0, 255}, {255, 255, 255, 255}};
-    DERR(SDL_SetPaletteColors(surface->format->palette, colors, 0, 2));
+    //SDL_Color colors[2] {{0, 0, 0, 255}, {255, 255, 255, 255}};
+    //DERR(SDL_SetPaletteColors(surface->format->palette, colors, 0, 2));
 
     while(cpu.int_enabled_ == 0) {
         cpu.step();
     }
 
+    // 0 - Top half
+    // 1 - Bottom half
     uint8_t next_int{0};
     uint32_t last_int_time{0};
 
@@ -88,17 +93,34 @@ int main(int argc, char const** argv)
         if(ticks > (last_int_time + (1000/60)) && cpu.int_enabled_ == 1) {
             last_int_time = ticks;
             cpu.generate_int(next_int?1:2);
-            next_int = !next_int;
 
             DERR(SDL_LockSurface(surface));
-            ::memcpy(surface->pixels, cpu.memory + 0x2400, TEXTURE_WIDTH*TEXTURE_HEIGHT/8);
+            uint32_t* pixel_ptr = reinterpret_cast<uint32_t*>(surface->pixels);
+            for(atat::word_t i{0x2400}; i<0x4000; ++i) {
+                auto b{cpu.memory[i]};
+                for(int off{0};off<8;++off) {
+                    *pixel_ptr++ = ((b>>off)&1)?0xFFFFFFFF:0xFF000000;
+                }
+            }
+            //::memcpy(surface->pixels, cpu.memory + 0x2400, TEXTURE_WIDTH*TEXTURE_HEIGHT/8);
             SDL_UnlockSurface(surface);
+            next_int = !next_int;
         }
 
         DERR(SDL_RenderClear(renderer));
 
+        static constexpr SDL_Rect src_rect{
+            0,0, 224, 256
+        };
+
+        static constexpr SDL_Rect dst_rect{
+            static_cast<int>(-16 * SCALE),static_cast<int>(16 * SCALE), SCREEN_HEIGHT, SCREEN_WIDTH
+        };
+
         SDL_Texture* texture{SDL_CreateTextureFromSurface(renderer, surface)};
-        DERR(SDL_RenderCopyEx(renderer, texture, nullptr, nullptr, 90, nullptr, SDL_FLIP_VERTICAL));
+        //DERR(SDL_RenderCopy(renderer, texture, nullptr, nullptr));
+        DERR(SDL_RenderCopyEx(renderer, texture, nullptr, &dst_rect, -90, nullptr, SDL_FLIP_NONE));
+        //DERR(SDL_RenderCopyEx(renderer, texture, &src_rect, &dst_rect, -90, nullptr, SDL_FLIP_NONE));
 
         SDL_RenderPresent(renderer);
         SDL_DestroyTexture(texture);
