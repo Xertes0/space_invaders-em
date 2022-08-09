@@ -4,6 +4,10 @@
 #include <fmt/core.h>
 #include <SDL2/SDL_error.h>
 
+#if defined(__cpp_lib_source_location) && !defined(NDEBUG)
+#include <source_location>
+#endif
+
 namespace space_inv
 {
 

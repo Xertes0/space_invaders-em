@@ -1,20 +1,13 @@
-#include <SDL2/SDL.h>
-#include <SDL_events.h>
-#include <SDL_keycode.h>
-#include <SDL_pixels.h>
-#include <SDL_render.h>
-#include <SDL_surface.h>
-#include <SDL_timer.h>
 #include <algorithm>
+#include <stdexcept>
+#include <functional>
+
+#include <SDL2/SDL.h>
 #include <atat/cpu/cpu.hh>
 #include <atat/cpu/registers.hh>
 #include <atat/opcodes.hh>
 #include <atat/disassembler.hh>
-
 #include <fmt/core.h>
-#include <source_location>
-#include <stdexcept>
-#include <functional>
 
 #include "atat/cpu/types.hh"
 #include "error.hh"
