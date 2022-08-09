@@ -28,11 +28,13 @@ Implements the hardware on top of [Intel 8080 emulator library](https://github.c
 make build-linux
 ``
 
-## Cross compile for windows using docker
+## Cross compile for windows using docker (recommended)
 ```bash
 docker build --target build-cross-linux-mingw64 --tag space_inv-emu:latest .
-docker run --rm -v $(pwd):/work space_inv-emu:latest bash -c "cd /work && make package-windows"
-# Optionaly append -v PATH_TO_INVADERS_ROM:/invaders.rom to include it in the zip file
+docker run --rm -v $(pwd):/work space_inv-emu:latest bash -c "cd /work && make pack-windows"
+# Optionaly append -v PATH_TO_INVADERS_ROM:/invaders.rom to docker command
+# And INVADERS_ROM_PATH=/invaders.rom to make command
+# To include the rom file in the zip file
 ```
 This will output the zip file to `build/out` directory.
 
@@ -44,9 +46,9 @@ make build-cross-mingw64
 
 To build and package into zip file
 ```bash
-make packge-windows
+make pack-windows
 # or
-make package-windows INVADERS_ROM_PATH=path_to_invaders_rom
+make pack-windows INVADERS_ROM_PATH=path_to_invaders_rom
 # to include the rom file in the zip file
 ```
 The zip file will be put in build/out/space_inv.zip
