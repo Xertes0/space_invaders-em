@@ -2,14 +2,17 @@
 #include <stdexcept>
 #include <functional>
 
+#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
+
 #include <atat/cpu/cpu.hh>
 #include <atat/cpu/registers.hh>
+#include <atat/cpu/types.hh>
 #include <atat/opcodes.hh>
 #include <atat/disassembler.hh>
+
 #include <fmt/core.h>
 
-#include "atat/cpu/types.hh"
 #include "error.hh"
 #include "hardware.hh"
 
@@ -24,7 +27,7 @@ static constexpr int SCREEN_HEIGHT {static_cast<int>(TEXTURE_WIDTH * SCALE)};
 
 static constexpr uint32_t REFRESH_RATE{1000/120}; // milliseconds
 
-int main(int argc, char const** argv)
+int main(int argc, char** argv)
 {
     if(argc < 2) {
         fmt::print(::stderr, "Specify space invaders rom file as an arugment\n");
