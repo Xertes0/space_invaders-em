@@ -30,7 +30,7 @@ static constexpr uint32_t REFRESH_RATE{1000/120}; // milliseconds
 int main(int argc, char** argv)
 {
     if(argc < 2) {
-        fmt::print(::stderr, "Specify space invaders rom file as an arugment\n");
+        fmt::print(stderr, "Specify space invaders rom file as an arugment\n");
         return 1;
     }
 

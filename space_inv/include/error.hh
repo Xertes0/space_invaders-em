@@ -17,7 +17,7 @@ void check_error(auto value, std::source_location sloc = std::source_location::c
 {
     // Works for ints and pointers
     if(Operator{}(value, decltype(value){0})) {
-        fmt::print(::stderr, "Error {} ({}): {}\n", sloc.function_name(), sloc.line(), SDL_GetError());
+        fmt::print(stderr, "Error {} ({}): {}\n", sloc.function_name(), sloc.line(), SDL_GetError());
         throw std::runtime_error{"SDL Error"};
     }
 }
@@ -26,7 +26,7 @@ template<class Operator = std::not_equal_to<>>
 void check_error(auto value)
 {
     if(Operator{}(value, decltype(value){0})) {
-        fmt::print(::stderr, "Error: {}\n", SDL_GetError());
+        fmt::print(stderr, "Error: {}\n", SDL_GetError());
         throw std::runtime_error{"SDL Error"};
     }
 }
