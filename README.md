@@ -20,8 +20,12 @@ Implements the hardware on top of [Intel 8080 emulator library](https://github.c
 
 # Building from source
 ## Build prerequisites
-- [conan](https://conan.io/) package manager
-- SDL2 already installed if building for linux
+If building for linux:
+- [Conan](https://conan.io/) package manager
+- SDL2 devel
+
+If cross compiling for windows:
+- Docker
 
 ## Compile for linux
 ``
