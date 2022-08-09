@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <functional>
+#include <filesystem>
 
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
@@ -22,20 +23,25 @@ static constexpr int TEXTURE_HEIGHT {224};
 static constexpr double SCALE{2};
 static constexpr int SCREEN_WIDTH  {static_cast<int>(TEXTURE_HEIGHT * SCALE)};
 static constexpr int SCREEN_HEIGHT {static_cast<int>(TEXTURE_WIDTH * SCALE)};
-//static constexpr int SCREEN_WIDTH  {static_cast<int>(TEXTURE_WIDTH * SCALE)};
-//static constexpr int SCREEN_HEIGHT {static_cast<int>(TEXTURE_HEIGHT * SCALE)};
 
 static constexpr uint32_t REFRESH_RATE{1000/120}; // milliseconds
 
 int main(int argc, char** argv)
 {
+    std::string_view invaders_path;
     if(argc < 2) {
-        fmt::print(stderr, "Specify space invaders rom file as an arugment\n");
-        return 1;
+        if(std::filesystem::exists("./invaders.rom")) {
+            invaders_path = "./invaders.rom";
+        } else {
+            fmt::print(stderr, "Specify space invaders rom file as an arugment or place it in the same directory with executable and name it 'invaders.rom'\n");
+            return 1;
+        }
+    } else {
+        invaders_path = argv[2];
     }
 
     space_inv::hardware hw{};
-    auto memory{atat::memory_with_rom(argv[1])};
+    auto memory{atat::memory_with_rom(invaders_path)};
     atat::cpu cpu{
         memory.data(),
         [&](atat::byte_t port){ return hw.in(port); },
