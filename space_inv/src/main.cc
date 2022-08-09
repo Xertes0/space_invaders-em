@@ -37,7 +37,7 @@ int main(int argc, char** argv)
             return 1;
         }
     } else {
-        invaders_path = argv[2];
+        invaders_path = argv[1];
     }
 
     space_inv::hardware hw{};
@@ -97,11 +97,19 @@ int main(int argc, char** argv)
                 atat::byte_t val = (e.type == SDL_KEYUP)?0:1;
                 switch(e.key.keysym.sym)
                 {
-                    case SDLK_a:        hw.left(val);     break;
-                    case SDLK_d:        hw.right(val);    break;
-                    case SDLK_SPACE:    hw.fire(val);     break;
-                    case SDLK_RETURN:   hw.credit(val);   break;
-                    case SDLK_1:        hw.start_1p(val); break;
+                    case SDLK_a:      hw.p1_left(val);  break;
+                    case SDLK_d:      hw.p1_right(val); break;
+                    case SDLK_w:      hw.p1_fire(val);  break;
+                    case SDLK_LEFT:   hw.p2_left(val);  break;
+                    case SDLK_RIGHT:  hw.p2_right(val); break;
+                    case SDLK_UP:     hw.p2_fire(val);  break;
+                    case SDLK_RETURN: hw.credit(val);   break;
+                    case SDLK_1:      hw.start_1p(val); break;
+                    case SDLK_2:      hw.start_2p(val); break;
+                    case SDLK_3:      hw.ship_count(3); break;
+                    case SDLK_4:      hw.ship_count(4); break;
+                    case SDLK_5:      hw.ship_count(5); break;
+                    case SDLK_6:      hw.ship_count(6); break;
                 }
             }
         }

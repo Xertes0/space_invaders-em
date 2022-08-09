@@ -1,4 +1,5 @@
 #include "hardware.hh"
+#include <stdexcept>
 
 namespace space_inv
 {
@@ -10,6 +11,7 @@ hardware::in(byte_t port)
     {
         case 0: return port0;
         case 1: return port1;
+        case 2: return port2;
         case 3:
         {
             word_t v = (shift1<<8) | shift0;
@@ -39,7 +41,7 @@ hardware::out(byte_t port, byte_t value)
 }
 
 void
-hardware::fire(byte_t on)
+hardware::p1_fire(byte_t on)
 {
     if(on == 1) {
         port1 |= (1 << 4);
@@ -49,7 +51,7 @@ hardware::fire(byte_t on)
 }
 
 void
-hardware::left(byte_t on)
+hardware::p1_left(byte_t on)
 {
     if(on == 1) {
         port1 |= (1 << 5);
@@ -59,12 +61,42 @@ hardware::left(byte_t on)
 }
 
 void
-hardware::right(byte_t on)
+hardware::p1_right(byte_t on)
 {
     if(on == 1) {
         port1 |= (1 << 6);
     } else {
         port1 &= ~(1 << 6);
+    }
+}
+
+void
+hardware::p2_fire(byte_t on)
+{
+    if(on == 1) {
+        port2 |= (1 << 4);
+    } else {
+        port2 &= ~(1 << 4);
+    }
+}
+
+void
+hardware::p2_left(byte_t on)
+{
+    if(on == 1) {
+        port2 |= (1 << 5);
+    } else {
+        port2 &= ~(1 << 5);
+    }
+}
+
+void
+hardware::p2_right(byte_t on)
+{
+    if(on == 1) {
+        port2 |= (1 << 6);
+    } else {
+        port2 &= ~(1 << 6);
     }
 }
 
@@ -86,6 +118,35 @@ hardware::start_1p(byte_t on)
     } else {
         port1 &= ~(1 << 2);
     }
+}
+
+void
+hardware::start_2p(byte_t on)
+{
+    if(on == 1) {
+        port1 |= (1 << 1);
+    } else {
+        port1 &= ~(1 << 1);
+    }
+}
+
+void
+hardware::ship_count(byte_t count)
+{
+#ifndef NDEBUG
+    if(count < 3 || count > 6) {
+        throw std::runtime_error{"Invalid ship count"};
+    }
+#endif
+
+    byte_t val = 0;
+    if(count == 4 | count == 6)
+        val |= 0b01;
+    if(count == 5 | count == 6)
+        val |= 0b10;
+
+    port2 &= ~0b11;
+    port2 |= val;
 }
 
 } // space_inv
