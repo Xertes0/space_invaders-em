@@ -8,7 +8,7 @@ if [ -z "$1" ] || [ "$1" == "--help" ] || [ ! -f "$SCRIPTS_DIR/$1.sh" ]; then
     echo "Usage:"
     echo " build.sh linux"
     echo " build.sh cross-linux-mingw64"
-    echo " Pass build variables as environment variables if necessary"
+    echo " Pass build settings as environment variables if necessary"
     exit 0
 fi
 
