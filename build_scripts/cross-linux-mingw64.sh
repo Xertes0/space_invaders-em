@@ -26,22 +26,22 @@ function check_package {
 function do_package {
     cd $PACK_DIR
 
-	cp $BUILD_DIR/space_inv/space_inv.exe .
-	cp $BUILD_DIR/SDL2/x86_64-w64-mingw32/bin/SDL2.dll .
-	for DLL in ${DLL_LIST[@]}; do
-		cp /usr/lib/gcc/x86_64-w64-mingw32/10-win32/$DLL .
-	done
+    cp $BUILD_DIR/space_inv/space_inv.exe .
+    cp $BUILD_DIR/SDL2/x86_64-w64-mingw32/bin/SDL2.dll .
+    for DLL in ${DLL_LIST[@]}; do
+        cp /usr/lib/gcc/x86_64-w64-mingw32/10-win32/$DLL .
+    done
 
-	if [ -n "$INVADERS_ROM_PATH" ]; then
-		cp $INVADERS_ROM_PATH ./invaders.rom
-	else
-		echo "!!! INVADERS_ROM_PATH not set rom won't be included in the resulting zip file !!!"
-	fi
+    if [ -n "$INVADERS_ROM_PATH" ]; then
+        cp $INVADERS_ROM_PATH ./invaders.rom
+    else
+        echo "!!! INVADERS_ROM_PATH not set rom won't be included in the resulting zip file !!!"
+    fi
 
-	if [ -f $PACK_DIR/space_invaders-em.zip ]; then
-		rm $PACK_DIR/space_invaders-em.zip
-	fi
-	zip space_invaders-em.zip ./*
+    if [ -f $PACK_DIR/space_invaders-em.zip ]; then
+        rm $PACK_DIR/space_invaders-em.zip
+    fi
+    zip space_invaders-em.zip ./*
 }
 
 function check_cache_sdl {
