@@ -23,9 +23,17 @@ Implements the hardware on top of [Intel 8080 emulator library](https://github.c
 If building for linux:
 - [Conan](https://conan.io/) package manager
 - SDL2 devel
+- cmake
+- gcc compiler
+- ninja or make
 
-If cross compiling for windows:
-- Docker
+If cross compiling for windows without docker:
+- [Conan](https://conan.io/) package manager
+- MinGW gcc and g++ compilers
+- cmake
+- ninja or make
+- wget
+- zip (if packaging to a zip file)
 
 ## Compile for linux
 ```bash
@@ -45,7 +53,12 @@ docker run --rm -v $(pwd):/work -v PATH_TO_ROM:/invaders.rom space_inv-emu:lates
 ```
 
 ## Cross compile for windows without using docker
-To build and package into zip file
+If you are using debian 11 which this script was tested on you can propably skip the following preparations
+1. Make sure `toolchains/cross-linux-mingw64.cmake` sets the right root path and compilers
+2. Make sure `conan/profiles/cross-linux-mingw64` has the right toolchain path and compiler version
+
+
+To build and package into a zip file
 ```bash
 bash ./build.sh cross-linux-mingw64
 ```

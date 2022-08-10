@@ -1,6 +1,6 @@
 FROM debian:11 as build-base
 
-RUN apt-get -y update && apt-get -y install make cmake python3-pip
+RUN apt-get -y update && apt-get -y install ninja-build cmake python3-pip
 RUN pip3 install conan
 
 FROM build-base as build-cross-linux-mingw64

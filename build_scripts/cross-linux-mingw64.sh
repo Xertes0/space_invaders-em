@@ -1,20 +1,21 @@
 STEPS=( make_dirs conan_install cache_sdl prepare_sdl cmake_generate cmake_build package )
 
-INVADERS_ROM_PATH=
 DLL_LIST=( libgcc_s_seh-1.dll libstdc++-6.dll )
 : ${BUILD_DIR:="$ROOT/build/cross-linux-mingw64"}
-: ${CMAKE_GENERATOR:="Unix Makefiles"}
+: ${CMAKE_GENERATOR:="Ninja"}
 : ${BUILD_TYPE:="Release"}
 : ${SDL_VERSION:="2.0.22"}
 : ${CMAKE_TOOLCHAIN:="$ROOT/toolchains/cross-linux-mingw64.cmake"}
 : ${CONAN_PROFILE:="$ROOT/conan/profiles/cross-linux-mingw64"}
 : ${DO_PACKAGE:="true"}
 : ${PACK_DIR:="$BUILD_DIR-out"}
+: ${INVADERS_ROM_PATH:=""}
 
 function check_package {
-    if [ $DO_PACKAGE == "false" ]; then
+    if [ $DO_PACKAGE == "false" ] || [ ! -f "$PACK_DIR/space_inv.exe" ]; then
         return 0
     fi
+
     if (( $(date -r $BUILD_DIR/space_inv/space_inv.exe "+%s") > $(date -r $PACK_DIR/space_inv.exe "+%s") )); then
         return 1
     else
@@ -83,7 +84,7 @@ function check_conan_install {
 
 function do_conan_install {
     cd $BUILD_DIR
-    conan install $ROOT/conan --build=missing --profile=$CONAN_PROFILE
+    conan install $ROOT/conan --build=missing --profile=$CONAN_PROFILE -c tools.cmake.cmaketoolchain:generator="$CMAKE_GENERATOR"
 }
 
 function check_cmake_generate {
