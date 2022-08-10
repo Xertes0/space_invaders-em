@@ -19,11 +19,13 @@ Implements the hardware on top of [Intel 8080 emulator library](https://github.c
 |Up arrow|2P Shoot|
 
 # ROM file
+Place the rom file in the same directory as the executable or pass it's path as command line argument.
+
 This repository does not contain the rom file necessary to run this emulator. You need to find one yourself.
 
 ## Format
-The rom file will propably be split into 4 files `invaders.e`, `invaders.f`, `invaders.g`, `invaders.h`  
-You need to merge them into one to use with this emulator  
+The rom file will propably be split into 4 files `invaders.e`, `invaders.f`, `invaders.g`, `invaders.h`.  
+You need to merge them into one to use with this emulator.  
 Example command:
 ```
 # Mind the order
