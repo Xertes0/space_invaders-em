@@ -27,7 +27,7 @@ function check_cmake_generate {
 
 function do_cmake_generate {
     cd $BUILD_DIR
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=Release $ROOT
+    cmake -G "$CMAKE_GENERATOR" -DCMAKE_BUILD_TYPE=Release $ROOT
 }
 
 function do_cmake_build {
