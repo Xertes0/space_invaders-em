@@ -63,7 +63,7 @@ function do_prepare_sdl {
     mv SDL2-$SDL_VERSION SDL2
 
     sed -i 's|set(prefix "/opt/local/x86_64-w64-mingw32")|set(prefix "/usr/x86_64-w64-mingw32")|'           $BUILD_DIR/SDL2/x86_64-w64-mingw32/lib/cmake/SDL2/sdl2-config.cmake
-    sed -i 's|set(SDL2_PREFIX "${prefix}")|set(SDL2_PREFIX "'$BUILD_DIR'/SDL2/x86_64-w64-mingw32")|'          $BUILD_DIR/SDL2/x86_64-w64-mingw32/lib/cmake/SDL2/sdl2-config.cmake
+    sed -i 's|set(SDL2_PREFIX "${prefix}")|set(SDL2_PREFIX "'$BUILD_DIR'/SDL2/x86_64-w64-mingw32")|'        $BUILD_DIR/SDL2/x86_64-w64-mingw32/lib/cmake/SDL2/sdl2-config.cmake
     sed -i 's|set(SDL2_EXEC_PREFIX "${exec_prefix}")|set(SDL2_EXEC_PREFIX "${SDL2_PREFIX}")|'               $BUILD_DIR/SDL2/x86_64-w64-mingw32/lib/cmake/SDL2/sdl2-config.cmake
     sed -i 's|set(SDL2_LIBDIR "${libdir}")|set(SDL2_LIBDIR "${SDL2_EXEC_PREFIX}/lib")|'                     $BUILD_DIR/SDL2/x86_64-w64-mingw32/lib/cmake/SDL2/sdl2-config.cmake
     sed -i 's|set(SDL2_INCLUDE_DIRS "${includedir}/SDL2")|set(SDL2_INCLUDE_DIRS "${SDL2_PREFIX}/include")|' $BUILD_DIR/SDL2/x86_64-w64-mingw32/lib/cmake/SDL2/sdl2-config.cmake
