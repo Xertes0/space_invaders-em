@@ -20,14 +20,14 @@ Implements the hardware on top of [Intel 8080 emulator library](https://github.c
 
 # Building from source
 ## Build prerequisites
-If building for linux:
+### If building for linux:
 - [Conan](https://conan.io/) package manager
 - SDL2 devel
 - cmake
 - gcc compiler
 - ninja or make
 
-If cross compiling for windows without docker:
+### If cross compiling for windows without docker:
 - [Conan](https://conan.io/) package manager
 - MinGW gcc and g++ compilers
 - cmake
