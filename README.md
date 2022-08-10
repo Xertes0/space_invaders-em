@@ -28,31 +28,26 @@ If cross compiling for windows:
 - Docker
 
 ## Compile for linux
-``
-make build-linux
-``
+```bash
+bash ./build.sh linux
+```
 
-## Cross compile for windows using docker (recommended)
+## Compile for windows using docker
 ```bash
 docker build --target build-cross-linux-mingw64 --tag space_inv-emu:latest .
-docker run --rm -v $(pwd):/work space_inv-emu:latest bash -c "cd /work && make pack-windows"
-# Optionaly append -v PATH_TO_INVADERS_ROM:/invaders.rom to docker command
-# And INVADERS_ROM_PATH=/invaders.rom to make command
-# To include the rom file in the zip file
+docker run --rm -v $(pwd):/work space_inv-emu:latest bash -c "cd /work && bash ./build.sh cross-linux-mingw64"
 ```
-This will output the zip file to `build/out` directory.
-
-## Cross compile for windows without using docker (not recommended)
-To just build
+This by default will pack the exe file with needed dlls to a zip file in `build/cross-linux-mingw64-out`  
+This can be disabled by setting `DO_PACKAGE=false` environment variable  
+If you want the rom file to be included in the zip file use:  
 ```bash
-make build-cross-mingw64
+docker run --rm -v $(pwd):/work -v PATH_TO_ROM:/invaders.rom space_inv-emu:latest bash -c "cd /work && INVADERS_ROM_PATH=/invaders.rom bash ./build.sh cross-linux-mingw64"
 ```
 
+## Cross compile for windows without using docker
 To build and package into zip file
 ```bash
-make pack-windows
-# or
-make pack-windows INVADERS_ROM_PATH=path_to_invaders_rom
-# to include the rom file in the zip file
+bash ./build.sh cross-linux-mingw64
 ```
-The zip file will be put in build/out/space_inv.zip
+Optionaly set `INVADERS_ROM_PATH` environment variable to include it in the resulting zip file  
+The zip file will be put in `build/cross-linux-mingw64-out`
