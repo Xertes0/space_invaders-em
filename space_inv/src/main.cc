@@ -71,7 +71,7 @@ int main(int argc, char** argv)
     //SDL_Color colors[2] {{0, 0, 0, 255}, {255, 255, 255, 255}};
     //DERR(SDL_SetPaletteColors(surface->format->palette, colors, 0, 2));
 
-    while(cpu.int_enabled_ == 0)
+    while(cpu.int_enabled == 0)
         cpu.step();
 
     // 0 - Top half
@@ -87,7 +87,7 @@ int main(int argc, char** argv)
         do{
             cpu.step();
             ++frame_skip;
-        }while(cpu.int_enabled_ == 0 || frame_skip < 20);
+        }while(cpu.int_enabled == 0 || frame_skip < 20);
 
         SDL_Event e;
         while(SDL_PollEvent(&e)) {
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
         }
 
         auto ticks = SDL_GetTicks();
-        if(ticks > (last_int_time + REFRESH_RATE) && cpu.int_enabled_ == 1) {
+        if(ticks > (last_int_time + REFRESH_RATE) && cpu.int_enabled == 1) {
             last_int_time = ticks;
             cpu.generate_int(next_int?1:2);
 
