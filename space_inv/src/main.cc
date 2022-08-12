@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     }
 
     space_inv::hardware hw{};
-    auto memory{atat::memory_with_rom(invaders_path)};
+    auto memory = atat::memory_with_rom(invaders_path);
     atat::cpu cpu{
         memory.data(),
         [&](atat::byte_t port){ return hw.in(port); },
@@ -50,23 +50,23 @@ int main(int argc, char** argv)
 
     ERR(SDL_Init(SDL_INIT_VIDEO));
 
-    SDL_Window* window{SDL_CreateWindow(
+    SDL_Window* window = SDL_CreateWindow(
         "Space Invaders",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         SCREEN_WIDTH, SCREEN_HEIGHT,
         SDL_WINDOW_SHOWN
-    )};
+    );
     ERRN(window);
 
-    SDL_Renderer* renderer{SDL_CreateRenderer(
+    SDL_Renderer* renderer = SDL_CreateRenderer(
         window, -1, 0//SDL_RENDERER_PRESENTVSYNC
-    )};
+    );
     ERRN(renderer);
 
-    SDL_Surface* surface{SDL_CreateRGBSurfaceWithFormat(
+    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
         SDL_SWSURFACE, TEXTURE_WIDTH, TEXTURE_HEIGHT, 1, SDL_PIXELFORMAT_ARGB8888
-    )};
+    );
     ERRN(surface);
     //SDL_Color colors[2] {{0, 0, 0, 255}, {255, 255, 255, 255}};
     //DERR(SDL_SetPaletteColors(surface->format->palette, colors, 0, 2));
@@ -76,10 +76,10 @@ int main(int argc, char** argv)
 
     // 0 - Top half
     // 1 - Bottom half
-    uint8_t next_int{0};
-    uint32_t last_int_time{0};
+    uint8_t  next_int = 0;
+    uint32_t last_int_time = 0;
 
-    bool close{false};
+    bool close = false;
     while(!close) {
         //for(int i=0;i<20;++i)
         //    cpu.step();
@@ -121,9 +121,9 @@ int main(int argc, char** argv)
 
             DERR(SDL_LockSurface(surface));
             uint32_t* pixel_ptr = reinterpret_cast<uint32_t*>(surface->pixels);
-            for(atat::word_t i{0x2400}; i<0x4000; ++i) {
-                auto b{cpu.memory[i]};
-                for(int off{0};off<8;++off) {
+            for(atat::word_t i = 0x2400; i<0x4000; ++i) {
+                auto b = cpu.memory[i];
+                for(int off = 0;off<8;++off) {
                     *pixel_ptr++ = ((b>>off)&1)?0xFFFFFFFF:0xFF000000;
                 }
             }
@@ -142,7 +142,7 @@ int main(int argc, char** argv)
             static_cast<int>(-16 * SCALE),static_cast<int>(16 * SCALE), SCREEN_HEIGHT, SCREEN_WIDTH
         };
 
-        SDL_Texture* texture{SDL_CreateTextureFromSurface(renderer, surface)};
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
         //DERR(SDL_RenderCopy(renderer, texture, nullptr, nullptr));
         DERR(SDL_RenderCopyEx(renderer, texture, nullptr, &dst_rect, -90, nullptr, SDL_FLIP_NONE));
         //DERR(SDL_RenderCopyEx(renderer, texture, &src_rect, &dst_rect, -90, nullptr, SDL_FLIP_NONE));
