@@ -31,7 +31,7 @@ Example command:
 # Mind the order
 cat ./invaders.h >  ./invaders.rom
 cat ./invaders.g >> ./invaders.rom
-cat ./invaders.g >> ./invaders.rom
+cat ./invaders.f >> ./invaders.rom
 cat ./invaders.e >> ./invaders.rom
 ```
 
